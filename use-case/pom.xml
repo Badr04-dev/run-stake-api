@@ -4,9 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fr.strivestake</groupId>
+    <parent>
+        <groupId>fr.strivestake</groupId>
+        <artifactId>run-stake</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
     <artifactId>use-case</artifactId>
-    <version>1.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -18,13 +22,13 @@
         <dependency>
             <groupId>fr.strivestake</groupId>
             <artifactId>domain</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>fr.strivestake</groupId>
             <artifactId>persistence</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
