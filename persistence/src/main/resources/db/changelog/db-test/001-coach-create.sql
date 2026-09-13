@@ -1,0 +1,11 @@
+--liquibase formatted sql
+
+--changeset Badr04-dev:001-coach-create
+--comment: Create table COACH
+
+CREATE TABLE COACH (
+    ID BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    FIRST_NAME VARCHAR(50) NOT NULL,
+    LAST_NAME VARCHAR(50) NOT NULL,
+    YEARS_OF_EXPERIENCE INT NOT NULL
+);
