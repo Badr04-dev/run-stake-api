@@ -24,6 +24,26 @@ public class StadiumEntity {
     @Column(name = "NUMBER_OF_SEATS")
     private int numberOfSeats;
 
+    public StadiumEntity name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public StadiumEntity city(String city) {
+        this.city = city;
+        return this;
+    }
+
+    public StadiumEntity country(String country) {
+        this.country = country;
+        return this;
+    }
+
+    public StadiumEntity numberOfSeats(int numberOfSeats) {
+        this.numberOfSeats = numberOfSeats;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof StadiumEntity that)) return false;

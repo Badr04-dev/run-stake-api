@@ -24,6 +24,26 @@ public class CoachEntity {
     @Column(name = "YEARS_OF_EXPERIENCE")
     private int yearsOfExperience;
 
+    public CoachEntity id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public CoachEntity firstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+    public CoachEntity lastName(String lastName) {
+        this.lastName = lastName;
+        return this;
+    }
+
+    public CoachEntity yearsOfExperience(int yearsOfExperience) {
+        this.yearsOfExperience = yearsOfExperience;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof CoachEntity that)) return false;

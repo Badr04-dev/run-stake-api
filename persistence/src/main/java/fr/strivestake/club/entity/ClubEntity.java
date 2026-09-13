@@ -28,6 +28,26 @@ public class ClubEntity {
     @JoinColumn(name = "FK_STADIUM_NAME")
     private StadiumEntity stadiumName;
 
+    public ClubEntity id(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public ClubEntity clubName(String clubName) {
+        this.clubName = clubName;
+        return this;
+    }
+
+    public ClubEntity coachId(CoachEntity coachId) {
+        this.coachId = coachId;
+        return this;
+    }
+
+    public ClubEntity stadiumName(StadiumEntity stadiumName) {
+        this.stadiumName = stadiumName;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof ClubEntity that)) return false;
