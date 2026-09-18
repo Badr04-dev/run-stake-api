@@ -1,5 +1,6 @@
 package fr.strivestake.club.create;
 
+import fr.strivestake.club.create.model.CreateClubRequest;
 import fr.strivestake.club.rules.ClubChecker;
 import fr.strivestake.club.rules.RuleException;
 import fr.strivestake.club.service.CreateClubService;
@@ -18,9 +19,16 @@ public class CreateClubUseCase {
     private final ClubChecker checker;
     private final CreateClubService createClubService;
 
-    public Club create(Club club) throws RuleException {
+    public Club create(CreateClubRequest request) throws RuleException {
+        Club club = createClub(request);
         throwIfInvalid(club);
         return createClubService.save(club);
+    }
+
+    private Club createClub(CreateClubRequest request) {
+        return new Club().clubName(request.getClubName())
+                .coach(request.getCoach())
+                .stadium(request.getStadium());
     }
 
     private void throwIfInvalid(Club club) {

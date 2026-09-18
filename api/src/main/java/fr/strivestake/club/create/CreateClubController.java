@@ -1,16 +1,19 @@
 package fr.strivestake.club.create;
 
 import fr.strivestake.club.create.dto.CreateClubRequestDto;
+import fr.strivestake.club.create.model.CreateClubRequest;
 import fr.strivestake.club.model.Club;
 import fr.strivestake.club.rules.RuleException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller("api/create")
+@RestController
+@RequestMapping("/api/create")
 @RequiredArgsConstructor
 public class CreateClubController {
 
@@ -19,8 +22,8 @@ public class CreateClubController {
 
     @PostMapping
     public ResponseEntity<Club> createClub(@RequestBody CreateClubRequestDto createClubRequestDto) throws RuleException {
-        Club club = mapper.map(createClubRequestDto, Club.class);
-        Club createdClub = createClubUseCase.create(club);
+        CreateClubRequest request = mapper.map(createClubRequestDto, CreateClubRequest.class);
+        Club createdClub = createClubUseCase.create(request);
         return ResponseEntity.ok(createdClub) ;
     }
 
