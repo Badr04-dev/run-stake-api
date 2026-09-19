@@ -1,5 +1,6 @@
 package fr.strivestake.club.rules;
 
+import fr.strivestake.common.checker.Rules;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

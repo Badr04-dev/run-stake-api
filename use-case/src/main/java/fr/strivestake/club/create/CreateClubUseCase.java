@@ -2,7 +2,7 @@ package fr.strivestake.club.create;
 
 import fr.strivestake.club.create.model.CreateClubRequest;
 import fr.strivestake.club.rules.ClubChecker;
-import fr.strivestake.club.rules.RuleException;
+import fr.strivestake.common.checker.RuleException;
 import fr.strivestake.club.service.CreateClubService;
 import fr.strivestake.club.model.Club;
 import lombok.RequiredArgsConstructor;

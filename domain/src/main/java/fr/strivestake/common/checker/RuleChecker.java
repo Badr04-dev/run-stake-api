@@ -1,6 +1,6 @@
-package fr.strivestake.club.rules;
+package fr.strivestake.common.checker;
 
-import fr.strivestake.club.rules.validators.RuleValidator;
+import fr.strivestake.common.checker.validator.RuleValidator;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;

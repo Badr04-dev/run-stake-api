@@ -1,4 +1,4 @@
-package fr.strivestake.club.rules;
+package fr.strivestake.common.checker;
 
 public interface Rules {
 

@@ -3,7 +3,7 @@ package fr.strivestake.club.create;
 import fr.strivestake.club.create.dto.CreateClubRequestDto;
 import fr.strivestake.club.create.model.CreateClubRequest;
 import fr.strivestake.club.model.Club;
-import fr.strivestake.club.rules.RuleException;
+import fr.strivestake.common.checker.RuleException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
