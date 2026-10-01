@@ -16,12 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static fr.strivestake.auth.model.ProviderEnum.GOOGLE;
 import static fr.strivestake.auth.model.AuthStatusEnum.AUTHENTICATED;
 import static fr.strivestake.auth.model.AuthStatusEnum.REGISTRATION_REQUIRED;
+import static fr.strivestake.auth.model.ProviderEnum.GOOGLE;
 import static fr.strivestake.user.rules.UserRules.RULE_0004;
 import static java.time.LocalDateTime.now;
 

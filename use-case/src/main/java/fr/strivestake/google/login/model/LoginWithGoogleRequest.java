@@ -1,7 +1,6 @@
 package fr.strivestake.google.login.model;
 
 import lombok.Getter;
-import org.jspecify.annotations.NonNull;
 
 @Getter
 public class LoginWithGoogleRequest {

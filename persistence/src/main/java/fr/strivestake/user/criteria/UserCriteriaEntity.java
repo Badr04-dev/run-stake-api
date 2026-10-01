@@ -1,7 +1,6 @@
 package fr.strivestake.user.criteria;
 
 import fr.groupebpce.sepia.criteria.Criteria;
-import fr.strivestake.auth.model.ProviderEnum;
 import fr.strivestake.user.model.AccountStatusEnum;
 import lombok.Getter;
 
