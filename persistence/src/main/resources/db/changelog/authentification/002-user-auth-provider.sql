@@ -1,0 +1,13 @@
+--liquibase formatted sql
+
+--changeset Badr04-dev:002-user-auth-provider
+--comment: Create table USER_AUTH_PROVIDER
+
+CREATE TABLE USER_AUTH_PROVIDER (
+    ID BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    FK_USER_ID BIGINT NOT NULL REFERENCES APP_USER(ID),
+    PROVIDER VARCHAR(20) NOT NULL,          -- 'GOOGLE', plus tard 'APPLE', 'FACEBOOK'...
+    PROVIDER_USER_ID VARCHAR(255) NOT NULL, -- le "sub" du token Google, identifiant stable
+    CREATED_AT TIMESTAMP NOT NULL DEFAULT now(),
+    CONSTRAINT UQ_PROVIDER_USER UNIQUE (PROVIDER, PROVIDER_USER_ID)
+);
