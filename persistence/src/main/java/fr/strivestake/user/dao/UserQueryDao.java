@@ -25,6 +25,11 @@ public class UserQueryDao extends QueryDao<UserEntity, UserCriteriaEntity> {
                     .addParameter("email", criteria.getEmail());
         }
 
+        if(nonNull(criteria.getUsername())) {
+            context.addCondition("user.username = :username")
+                    .addParameter("username", criteria.getUsername());
+        }
+
         if(nonNull(criteria.getAccountStatus())) {
             context.addCondition("user.accountStatus = :accountStatus")
                     .addParameter("accountStatus", criteria.getAccountStatus());

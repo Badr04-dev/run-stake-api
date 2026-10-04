@@ -28,4 +28,16 @@ public class SearchUserService {
         );
     }
 
+    public boolean isEmailExists(String email) {
+        return userRepository.exists(new UserCriteria().email(email));
+    }
+
+    public boolean isEmailNotExists(String email) {
+        return !isEmailExists(email);
+    }
+
+    public boolean isUsernameExists(String username) {
+        return userRepository.exists(new UserCriteria().username(username));
+    }
+
 }

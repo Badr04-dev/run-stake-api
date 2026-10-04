@@ -8,10 +8,16 @@ import lombok.Getter;
 public class UserCriteriaEntity extends Criteria {
 
     private String email;
+    private String username;
     private AccountStatusEnum accountStatus;
 
     public UserCriteriaEntity email(String email) {
         this.email = email;
+        return this;
+    }
+
+    public UserCriteriaEntity username(String username) {
+        this.username = username;
         return this;
     }
 

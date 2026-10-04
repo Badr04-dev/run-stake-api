@@ -12,7 +12,7 @@ import static fr.strivestake.user.rules.UserRules.RULE_0004;
 
 @Component
 @RequiredArgsConstructor
-public class User001Validator implements RuleValidator<User> {
+public class User0004Validator implements RuleValidator<User> {
 
     private final SearchUserService searchUserService;
 

@@ -1,27 +1,28 @@
 package fr.strivestake.google.registration.model;
 
 import fr.strivestake.auth.model.AuthStatusEnum;
+import fr.strivestake.google.common.model.AuthenticateWithGoogleResponse;
+import fr.strivestake.user.model.User;
 import lombok.Getter;
 
 @Getter
-public class RegisterWithGoogleResponse {
+public class RegisterWithGoogleResponse extends AuthenticateWithGoogleResponse {
 
-    private AuthStatusEnum status;
-    private String accessToken;
-    private Long userId;
-
+    @Override
     public RegisterWithGoogleResponse status(AuthStatusEnum status) {
         this.status = status;
         return this;
     }
 
+    @Override
     public RegisterWithGoogleResponse accessToken(String accessToken) {
         this.accessToken = accessToken;
         return this;
     }
 
-    public RegisterWithGoogleResponse userId(Long userId) {
-        this.userId = userId;
+    @Override
+    public RegisterWithGoogleResponse user(User user) {
+        this.user = user;
         return this;
     }
 }

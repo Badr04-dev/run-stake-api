@@ -1,29 +1,27 @@
 package fr.strivestake.auth;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import fr.strivestake.auth.dao.UserAuthProviderCrudDao;
-import fr.strivestake.auth.entity.UserAuthProviderEntity;
+import fr.strivestake.auth.common.CheckResponseStepDef;
+import fr.strivestake.common.auth.service.JwtService;
 import fr.strivestake.common.checker.RuleException;
 import fr.strivestake.google.login.LoginWithGoogleUseCase;
 import fr.strivestake.google.login.model.LoginWithGoogleRequest;
 import fr.strivestake.google.login.model.LoginWithGoogleResponse;
+import fr.strivestake.google.model.RegistrationClaims;
 import fr.strivestake.google.service.GoogleTokenVerifierService;
-import fr.strivestake.user.dao.UserCrudDao;
-import fr.strivestake.user.entity.UserEntity;
-import fr.strivestake.user.model.AccountStatusEnum;
-import io.cucumber.java.Before;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import lombok.Getter;
+import lombok.Setter;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static fr.strivestake.auth.model.AuthStatusEnum.AUTHENTICATED;
-import static fr.strivestake.auth.model.ProviderEnum.GOOGLE;
-import static java.time.LocalDateTime.now;
+import static fr.strivestake.auth.model.AuthStatusEnum.REGISTRATION_REQUIRED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+@Getter
+@Setter
 public class LoginWithGoogleStepDef {
 
     @Autowired
@@ -33,69 +31,55 @@ public class LoginWithGoogleStepDef {
     private GoogleTokenVerifierService googleTokenVerifierService;
 
     @Autowired
-    private UserCrudDao userCrudDao;
+    private CheckResponseStepDef checkResponseStepDef;
 
     @Autowired
-    private UserAuthProviderCrudDao userAuthProviderCrudDao;
+    private JwtService jwtService;
 
     private LoginWithGoogleResponse response;
-    private RuleException thrownException;
-    private UserEntity logedInUser;
 
-    @Before
-    public void setUp() {
-        userAuthProviderCrudDao.deleteAll();
-        userCrudDao.deleteAll();
-    }
-
-    @Given("a user {string} with email {string}, provider user id {string} and has an account status of {string} exists in the database")
-    public void aUserExists(String username, String email, String providerUserId, String accountStatus) {
-        logedInUser = new UserEntity()
-                .username(username)
-                .email(email)
-                .accountStatus(AccountStatusEnum.valueOf(accountStatus))
-                .createdAt(now());
-        userCrudDao.save(logedInUser);
-
-        UserAuthProviderEntity userAuthProviderEntity = new UserAuthProviderEntity()
-                .user(logedInUser)
-                .provider(GOOGLE)
-                .providerUserId(providerUserId)
-                .createdAt(now());
-        userAuthProviderCrudDao.save(userAuthProviderEntity);
-    }
-
-    @When("the user {string} with email {string} and provider user id {string} tries to authenticate with id token {string}")
-    public void authenticateWithUsernameAndEmail(String username, String email, String providerUserId, String idToken) {
+    @When("the user {string} with email {string} and provider user id {string} tries to login with id token {string}")
+    public void loginAnExistingUser(String username, String email, String providerUserId, String idToken) {
         GoogleIdToken.Payload payload = initializePayload(username, email, providerUserId);
 
         mockGoogleTokenVerifications(idToken, payload);
 
+        setData(username, email, providerUserId);
+
         try {
             response = useCase.login(new LoginWithGoogleRequest().idToken(idToken));
+            checkResponseStepDef.setResponse(response);
         } catch (RuleException e) {
-            thrownException = e;
+            checkResponseStepDef.setThrownException(e);
         }
     }
 
-    @Then("the authentication is granted")
-    public void authenticationIsGranted() {
-        assertThat(thrownException).isNull();
+    @When("the user with google username {string}, email {string} and provider user id {string} tries to login with id token {string}")
+    public void authenticateNewUser(String googleUsername, String email, String providerUserId, String idToken) {
+        GoogleIdToken.Payload payload = initializePayload(googleUsername, email, providerUserId);
+
+        mockGoogleTokenVerifications(idToken, payload);
+
+        setData(googleUsername, email, providerUserId);
+
+        try {
+            response = useCase.login(new LoginWithGoogleRequest().idToken(idToken));
+            checkResponseStepDef.setResponse(response);
+        } catch (RuleException e) {
+            checkResponseStepDef.setThrownException(e);
+        }
+    }
+
+    @Then("the user is required to register")
+    public void userRequiredToRegister() {
+        assertThat(checkResponseStepDef.getThrownException()).isNull();
         assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isEqualTo(AUTHENTICATED);
-        assertThat(response.getAccessToken()).isNotNull();
-        assertThat(response.getUser()).isNotNull();
-        assertThat(response.getUser().getId()).isEqualTo(logedInUser.getId());
-    }
-
-    @Then("the authentication is denied")
-    public void authenticationIsDenied() {
-        assertThat(thrownException).isNotNull();
-    }
-
-    @Then("the user must be informed of the violation of {string}")
-    public void informedOfRule(String ruleId) {
-        assertThat(thrownException.getRuleId()).isEqualTo(ruleId);
+        assertThat(response.getStatus()).isEqualTo(REGISTRATION_REQUIRED);
+        assertThat(response.getAccessToken()).isNull();
+        assertThatRegistrationTokenIsCorrect();
+        assertThat(response.getUser()).isNull();
+        assertThat(response.getSuggestedName()).isNotNull();
+        assertThat(response.getSuggestedEmail()).isNotNull();
     }
 
     private GoogleIdToken.@NonNull Payload initializePayload(String username, String email, String providerUserId) {
@@ -108,5 +92,19 @@ public class LoginWithGoogleStepDef {
 
     private void mockGoogleTokenVerifications(String idToken, GoogleIdToken.Payload payload) {
         when(googleTokenVerifierService.verify(idToken)).thenReturn(payload);
+    }
+
+    private void assertThatRegistrationTokenIsCorrect() {
+        assertThat(response.getRegistrationToken()).isNotNull();
+        RegistrationClaims claims = jwtService.parseRegistrationToken(response.getRegistrationToken());
+        assertThat(claims.googleSub()).isEqualTo(checkResponseStepDef.getExpectedProviderUserId());
+        assertThat(claims.email()).isEqualTo(checkResponseStepDef.getExpectedEmail());
+    }
+
+    private void setData(String username, String email, String providerUserId) {
+        checkResponseStepDef
+                .expectedUsername(username)
+                .expectedEmail(email)
+                .expectedProviderUserId(providerUserId);
     }
 }

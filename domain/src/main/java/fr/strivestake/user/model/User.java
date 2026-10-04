@@ -13,7 +13,7 @@ public class User {
     private Long id;
     private String username;
     private String email;
-    private String accountStatus;
+    private AccountStatusEnum accountStatus;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -32,7 +32,7 @@ public class User {
         return this;
     }
 
-    public User accountStatus(String accountStatus) {
+    public User accountStatus(AccountStatusEnum accountStatus) {
         this.accountStatus = accountStatus;
         return this;
     }

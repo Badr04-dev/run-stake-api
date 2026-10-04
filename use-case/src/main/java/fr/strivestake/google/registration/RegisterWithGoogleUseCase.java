@@ -2,10 +2,10 @@ package fr.strivestake.google.registration;
 
 import fr.strivestake.auth.model.UserAuthProvider;
 import fr.strivestake.auth.repository.UserAuthProviderRepository;
+import fr.strivestake.common.auth.service.JwtService;
 import fr.strivestake.google.model.RegistrationClaims;
 import fr.strivestake.google.registration.model.RegisterWithGoogleRequest;
 import fr.strivestake.google.registration.model.RegisterWithGoogleResponse;
-import fr.strivestake.common.auth.service.JwtService;
 import fr.strivestake.user.model.User;
 import fr.strivestake.user.repository.UserRepository;
 import fr.strivestake.user.rules.UserChecker;
@@ -14,9 +14,14 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import static fr.strivestake.auth.model.ProviderEnum.GOOGLE;
-import static fr.strivestake.user.rules.UserRules.RULE_002;
+import java.time.LocalDateTime;
+
 import static fr.strivestake.auth.model.AuthStatusEnum.REGISTERED;
+import static fr.strivestake.auth.model.ProviderEnum.GOOGLE;
+import static fr.strivestake.user.model.AccountStatusEnum.ACTIVE;
+import static fr.strivestake.user.rules.UserRules.RULE_0001;
+import static fr.strivestake.user.rules.UserRules.RULE_0002;
+import static java.time.LocalDateTime.now;
 
 @Transactional
 @Component
@@ -33,7 +38,8 @@ public class RegisterWithGoogleUseCase {
 
         User newUser = toUser(request, claims);
         throwIfInvalid(newUser);
-        User savedUser = registerUser(newUser, claims);
+        User savedUser = registerUser(newUser);
+        saveUserAuthProvider(savedUser, claims);
 
         return toResponse(claims, savedUser);
     }
@@ -41,32 +47,37 @@ public class RegisterWithGoogleUseCase {
     private User toUser(RegisterWithGoogleRequest request, RegistrationClaims claims) {
         return new User()
                 .username(request.getUsername())
-                .email(claims.email());
+                .email(claims.email())
+                .accountStatus(ACTIVE)
+                .createdAt(now());
     }
 
     private void throwIfInvalid(User user) {
-        checker.check(user, RULE_002);
+        checker.check(user, RULE_0001, RULE_0002);
     }
 
-    private @NonNull User registerUser(User newUser, RegistrationClaims claims) {
-        User savedUser = userRepository.save(newUser);
+    private @NonNull User registerUser(User newUser) {
+        return userRepository.save(newUser);
+    }
+
+    private void saveUserAuthProvider(User savedUser, RegistrationClaims claims) {
         UserAuthProvider userAuthProvider = toUserAuthProvider(savedUser, claims);
         userAuthProviderRepository.save(userAuthProvider);
-        return savedUser;
     }
 
     private UserAuthProvider toUserAuthProvider(User savedUser, RegistrationClaims claims) {
         return new UserAuthProvider()
                 .userId(savedUser.getId())
                 .provider(GOOGLE)
-                .providerUserId(claims.googleSub());
+                .providerUserId(claims.googleSub())
+                .createdAt(now());
     }
 
     private RegisterWithGoogleResponse toResponse(RegistrationClaims claims, User savedUser) {
         return new RegisterWithGoogleResponse()
                 .status(REGISTERED)
                 .accessToken(getAccessToken(claims))
-                .userId(savedUser.getId());
+                .user(savedUser);
     }
 
     private String getAccessToken(RegistrationClaims claims) {

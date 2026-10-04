@@ -6,12 +6,18 @@ import fr.strivestake.user.model.AccountStatusEnum;
 public class UserCriteria {
 
     private String email;
+    private String username;
     private ProviderEnum provider;
     private String subject;
     private AccountStatusEnum accountStatus;
 
     public UserCriteria email(String email) {
         this.email = email;
+        return this;
+    }
+
+    public UserCriteria username(String username) {
+        this.username = username;
         return this;
     }
 

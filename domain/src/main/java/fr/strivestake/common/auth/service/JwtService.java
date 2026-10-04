@@ -2,10 +2,13 @@ package fr.strivestake.common.auth.service;
 
 import fr.strivestake.auth.model.AuthStatusEnum;
 import fr.strivestake.google.exception.InvalidTokenException;
+import fr.strivestake.google.model.AccessTokenClaims;
 import fr.strivestake.google.model.RegistrationClaims;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -52,21 +55,37 @@ public class JwtService {
     }
 
     public RegistrationClaims parseRegistrationToken(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        Claims claims = Jwts.parser().verifyWith(key).build()
+                .parseSignedClaims(token).getPayload();
 
         throwIfThePurposeIsNotToRegister(claims);
 
         return new RegistrationClaims(claimGoogleSub(claims), claimEmail(claims));
     }
 
+    public AccessTokenClaims parseAccessToken(String token) {
+        Claims claims;
+        try {
+            claims = Jwts.parser().verifyWith(key).build()
+                    .parseSignedClaims(token).getPayload();
+        } catch (JwtException e) {
+            throw new InvalidTokenException(e);
+        }
+
+        return new AccessTokenClaims(claims.getSubject(), claims.get("email", String.class));
+    }
+
     private void throwIfThePurposeIsNotToRegister(Claims claims) {
-        if (REGISTRATION_REQUIRED != claims.get("purpose", AuthStatusEnum.class)) {
+        AuthStatusEnum status = getStatusFromClaims(claims);
+        if (REGISTRATION_REQUIRED != status) {
             throw new InvalidTokenException();
         }
+    }
+
+    private @NonNull AuthStatusEnum getStatusFromClaims(Claims claims) {
+        String purpose = claims.get("purpose", String.class);
+        AuthStatusEnum status = AuthStatusEnum.valueOf(purpose);
+        return status;
     }
 
     private String claimGoogleSub(Claims claims) {
