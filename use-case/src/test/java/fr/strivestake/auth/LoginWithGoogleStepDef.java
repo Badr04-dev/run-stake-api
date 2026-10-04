@@ -2,11 +2,11 @@ package fr.strivestake.auth;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import fr.strivestake.auth.common.CheckResponseStepDef;
-import fr.strivestake.common.auth.service.JwtService;
+import fr.strivestake.google.service.JwtService;
 import fr.strivestake.common.checker.RuleException;
-import fr.strivestake.google.login.LoginWithGoogleUseCase;
-import fr.strivestake.google.login.model.LoginWithGoogleRequest;
-import fr.strivestake.google.login.model.LoginWithGoogleResponse;
+import fr.strivestake.auth.google.login.LoginWithGoogleUseCase;
+import fr.strivestake.auth.google.login.model.LoginWithGoogleRequest;
+import fr.strivestake.auth.google.login.model.LoginWithGoogleResponse;
 import fr.strivestake.google.model.RegistrationClaims;
 import fr.strivestake.google.service.GoogleTokenVerifierService;
 import io.cucumber.java.en.Then;
@@ -16,7 +16,7 @@ import lombok.Setter;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static fr.strivestake.auth.model.AuthStatusEnum.REGISTRATION_REQUIRED;
+import static fr.strivestake.common.auth.model.AuthStatusEnum.REGISTRATION_REQUIRED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 

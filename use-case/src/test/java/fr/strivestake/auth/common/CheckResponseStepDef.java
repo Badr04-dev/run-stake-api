@@ -1,17 +1,17 @@
 package fr.strivestake.auth.common;
 
-import fr.strivestake.common.auth.service.JwtService;
+import fr.strivestake.google.service.JwtService;
 import fr.strivestake.common.checker.RuleException;
-import fr.strivestake.google.common.model.AuthenticateWithGoogleResponse;
-import fr.strivestake.google.login.model.LoginWithGoogleResponse;
+import fr.strivestake.auth.google.common.model.AuthenticateWithGoogleResponse;
+import fr.strivestake.auth.google.login.model.LoginWithGoogleResponse;
 import fr.strivestake.google.model.AccessTokenClaims;
 import io.cucumber.java.en.Then;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static fr.strivestake.auth.model.AuthStatusEnum.AUTHENTICATED;
-import static fr.strivestake.auth.model.AuthStatusEnum.REGISTERED;
+import static fr.strivestake.common.auth.model.AuthStatusEnum.AUTHENTICATED;
+import static fr.strivestake.common.auth.model.AuthStatusEnum.REGISTERED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Getter

@@ -2,10 +2,10 @@ package fr.strivestake.auth;
 
 import fr.strivestake.auth.common.CheckResponseStepDef;
 import fr.strivestake.common.checker.RuleException;
-import fr.strivestake.google.login.model.LoginWithGoogleResponse;
-import fr.strivestake.google.registration.RegisterWithGoogleUseCase;
-import fr.strivestake.google.registration.model.RegisterWithGoogleRequest;
-import fr.strivestake.google.registration.model.RegisterWithGoogleResponse;
+import fr.strivestake.auth.google.login.model.LoginWithGoogleResponse;
+import fr.strivestake.auth.google.registration.RegisterWithGoogleUseCase;
+import fr.strivestake.auth.google.registration.model.RegisterWithGoogleRequest;
+import fr.strivestake.auth.google.registration.model.RegisterWithGoogleResponse;
 import io.cucumber.java.en.And;
 import org.springframework.beans.factory.annotation.Autowired;
 

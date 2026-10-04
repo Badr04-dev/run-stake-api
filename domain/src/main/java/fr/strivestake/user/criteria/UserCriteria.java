@@ -1,6 +1,6 @@
 package fr.strivestake.user.criteria;
 
-import fr.strivestake.auth.model.ProviderEnum;
+import fr.strivestake.user_auth_provider.model.ProviderEnum;
 import fr.strivestake.user.model.AccountStatusEnum;
 
 public class UserCriteria {

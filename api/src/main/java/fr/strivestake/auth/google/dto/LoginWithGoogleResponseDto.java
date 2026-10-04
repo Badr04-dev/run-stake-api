@@ -1,6 +1,6 @@
 package fr.strivestake.auth.google.dto;
 
-import fr.strivestake.auth.model.AuthStatusEnum;
+import fr.strivestake.common.auth.model.AuthStatusEnum;
 import fr.strivestake.user.model.User;
 
 public record LoginWithGoogleResponseDto (

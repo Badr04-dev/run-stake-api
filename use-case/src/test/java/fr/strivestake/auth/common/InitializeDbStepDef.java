@@ -1,7 +1,7 @@
 package fr.strivestake.auth.common;
 
-import fr.strivestake.auth.dao.UserAuthProviderCrudDao;
-import fr.strivestake.auth.entity.UserAuthProviderEntity;
+import fr.strivestake.user_auth_provider.dao.UserAuthProviderCrudDao;
+import fr.strivestake.user_auth_provider.entity.UserAuthProviderEntity;
 import fr.strivestake.user.dao.UserCrudDao;
 import fr.strivestake.user.entity.UserEntity;
 import fr.strivestake.user.model.AccountStatusEnum;
@@ -10,7 +10,7 @@ import io.cucumber.java.en.Given;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static fr.strivestake.auth.model.ProviderEnum.GOOGLE;
+import static fr.strivestake.user_auth_provider.model.ProviderEnum.GOOGLE;
 import static java.time.LocalDateTime.now;
 
 @Getter
